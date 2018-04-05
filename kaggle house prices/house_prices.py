@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 
 from sklearn import preprocessing
 from sklearn import linear_model
+from sklearn.ensemble import IsolationForest
 
 
 
@@ -76,16 +77,16 @@ dataset['YearBuilt']=pd.to_datetime(dataset.YearBuilt, format='%Y')
 dataset['YrSold']=pd.to_datetime(dataset.YrSold, format='%Y')
 dataset['YearRemodAdd']=pd.to_datetime(dataset.YearBuilt, format='%Y')
 dataset['GarageYrBlt']=pd.to_datetime(dataset.YearBuilt, format='%Y')
-dataset['YearRemodAdd']=pd.to_datetime(dataset.YearBuilt, format='%Y')
 
 datatest['YearBuilt']=pd.to_datetime(dataset.YearBuilt, format='%Y')
 datatest['YearRemodAdd']=pd.to_datetime(dataset.YearBuilt, format='%Y')
 datatest['GarageYrBlt']=pd.to_datetime(dataset.YearBuilt, format='%Y')
 datatest['YearRemodAdd']=pd.to_datetime(dataset.YearBuilt, format='%Y')
 
+# je récupère les Id
+Id = dataset['Id']
 
-print("jgdkhkhgfhik", dataset['YrSold'].dtype)
-
+# fonction pour le traitement des données 
 current_day = pd.to_datetime('today')
     
     
@@ -113,10 +114,35 @@ def convert_data(dataset):
             
 
 datatrain=convert_data(dataset)
-print(datatrain)
+datatest = convert_data(datatest)
+
                 
 
-            
+
+#entrainement des données
+x_train = datatrain[['MSSubClass', 'LotFrontage', 'LotArea', 'OverallQual', 'OverallCond','1stFlrSF', '2ndFlrSF', 'LowQualFinSF', 'GrLivArea', 'BsmtFullBath',
+ 'BsmtHalfBath', 'FullBath', 'HalfBath', 'BedroomAbvGr', 'KitchenAbvGr',
+'MasVnrArea', 'BsmtFinSF1', 'BsmtFinSF2', 'BsmtUnfSF', 'TotalBsmtSF','MSZoning', 'Street', 'Alley', 'LotShape', 'LandContour', 'Utilities',
+      'LotConfig', 'LandSlope', 'Neighborhood', 'Condition1', 'Condition2',
+      'BldgType', 'HouseStyle', 'RoofStyle', 'RoofMatl', 'Exterior1st',
+       'Exterior2nd', 'MasVnrType', 'ExterQual', 'ExterCond', 'Foundation',
+       'BsmtQual', 'BsmtCond', 'BsmtExposure', 'BsmtFinType1', 'BsmtFinType2',
+       'Heating', 'HeatingQC', 'CentralAir', 'Electrical', 'GarageCars',
+       'GarageArea', 'TotRmsAbvGrd', 'Fireplaces', 'WoodDeckSF', 'OpenPorchSF',
+       'EnclosedPorch', '3SsnPorch', 'ScreenPorch', 'PoolArea', 'MiscVal',
+       'MoSold', 'KitchenQual', 'Functional', 'FireplaceQu', 'GarageType',
+       'GarageFinish', 'GarageQual', 'GarageCond', 'PavedDrive', 'PoolQC',
+       'Fence', 'MiscFeature', 'SaleType', 'SaleCondition', 'YearBuilt',
+      'YearRemodAdd', 'GarageYrBlt', 'YrSold']]
+
+y_train = dataset['SalePrice']
+
+clf = IsolationForest(max_samples=10000, random_state=10)
+
+y_pred_train = clf.predict(x_train)
+#y_pred_test = clf.predict(x_test)
+
+clf.fit(x_train)           
                 
         
       
